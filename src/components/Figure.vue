@@ -14,7 +14,7 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 export default class Figure extends Vue {
   @Prop({ default: () => undefined }) item!: string | undefined;
 
-  public figure = "";
+  public figure: string | undefined = "";
   mounted() {
     this.figure = this.item;
   }
