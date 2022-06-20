@@ -1,13 +1,13 @@
 <template>
-  <hello-world />
+  <list-figure />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "../components/HelloWorld.vue";
+import ListFigure from "../components/ListFigure.vue";
 @Component({
   components: {
-    HelloWorld,
+    ListFigure,
   },
 })
 export default class HomeView extends Vue {}
