@@ -13,9 +13,6 @@ import { Component, Vue, Prop } from "vue-property-decorator";
   components: {},
 })
 export default class Figure extends Vue {
-  static size() {
-    throw new Error("Method not implemented.");
-  }
   @Prop({ default: () => undefined }) item!: string | undefined;
   @Prop({ default: () => undefined }) index!: number | undefined;
 

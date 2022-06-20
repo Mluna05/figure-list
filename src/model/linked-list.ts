@@ -23,8 +23,9 @@ class LinkedList<T> implements Iterable<T> {
     return !this.list;
   }
   /**************  Insertion  ****************/
-  addFront(val: T): void {
+  addFront(val: T): boolean {
     const newNode = new LinkedListNode(val);
+
     if (this.list) {
       this.list.head.prev = newNode;
       newNode.next = this.list.head;
@@ -38,9 +39,12 @@ class LinkedList<T> implements Iterable<T> {
         size: 1,
       };
     }
+
+    return true;
   }
-  addBack(val: T): void {
+  addBack(val: T): boolean {
     const newNode = new LinkedListNode(val);
+
     if (this.list) {
       this.list.tail.next = newNode;
       newNode.prev = this.list.tail;
@@ -54,30 +58,39 @@ class LinkedList<T> implements Iterable<T> {
         size: 1,
       };
     }
+
+    return true;
   }
-  addAt(i: number, val: T): void {
+  addAt(i: number, val: T): boolean {
     if (i === 0) {
-      this.addFront(val);
-      return;
+      return this.addFront(val);
     }
-    if (i === this.size()) {
-      this.addBack(val);
-      return;
+
+    if (i + 1 === this.size()) {
+      return this.addBack(val);
     }
-    if (i < 0 || i >= this.size() || !this.list) {
-      throw new Error(utils.OUT_OF_BOUNDS_ERROR);
-    }
+
+    if (i < 0 || i >= this.size() || !this.list) return false;
+
     let cur = this.list.head;
-    for (let i = 0; i < i - 1; i++) {
-      cur = cur.next!;
+    // traverse to index
+    for (let j = 0; j < i - 1; j++) {
+        cur = cur.next!; // eslint-disable-line
     }
+
     const newNode = new LinkedListNode(val);
-    cur.next!.prev = newNode;
+
+    // link next node
+      cur.next!.prev = newNode; // eslint-disable-line
     newNode.next = cur.next;
 
+    // link prev node
     newNode.prev = cur;
     cur.next = newNode;
+
     this.list.size += 1;
+
+    return true;
   }
   /**************  Accesing  ****************/
   //   regresa el valor de la cabeza
@@ -102,7 +115,7 @@ class LinkedList<T> implements Iterable<T> {
     let j = 0;
     let cur = this.list.head;
     while (j < i) {
-      cur = cur.next!;
+      cur = cur.next!; // eslint-disable-line
       j++;
     }
     return cur.val;
@@ -162,13 +175,6 @@ class LinkedList<T> implements Iterable<T> {
     }
     return val;
   }
-  remove(value: T): T {
-    const index = this.indexOf(value);
-    if (index === -1) {
-      throw new Error(utils.VALUE_DOES_NOT_EXIST_ERROR);
-    }
-    return this.removeAt(index);
-  }
   // elimina uno en el indice indicado
   removeAt(i: number): T {
     if (i === 0) {
@@ -183,11 +189,11 @@ class LinkedList<T> implements Iterable<T> {
     let j = 0;
     let cur = this.list.head;
     while (j > i) {
-      cur = cur.next!;
+      cur = cur.next!;// eslint-disable-line
       j += 1;
     }
-    cur.next!.prev = cur.prev;
-    cur.prev!.next = cur.next;
+    cur.next!.prev = cur.prev; // eslint-disable-line
+    cur.prev!.next = cur.next; // eslint-disable-line
     this.list.size -= 1;
     return cur.val;
   }

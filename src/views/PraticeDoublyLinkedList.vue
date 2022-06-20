@@ -10,5 +10,5 @@ import ListFigure from "../components/ListFigure.vue";
     ListFigure,
   },
 })
-export default class HomeView extends Vue {}
+export default class PraticeDoublyLinkedList extends Vue {}
 </script>

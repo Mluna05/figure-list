@@ -1,41 +1,105 @@
 <template>
   <v-container>
-    <v-row class="text-center">
-      <v-col cols="4">
-        <v-btn class="mx-2" color="blue lighten-2" @click="addCirculo">
-          <v-icon color="blue darken-2"> mdi-circle </v-icon>
-        </v-btn>
-      </v-col>
-      <v-col cols="4">
-        <v-btn class="mx-2" color="red lighten-2" @click="addTriangulo">
-          <v-icon color="red darken-2"> mdi-triangle </v-icon>
-        </v-btn>
-      </v-col>
-      <v-col cols="4">
-        <v-btn class="mx-2" color="green lighten-2" @click="addCuadrado">
-          <v-icon color="green darken-2"> mdi-square </v-icon>
-        </v-btn>
-      </v-col>
-    </v-row>
+    <!-- figure-list -->
     <v-row class="text-center">
       <v-col cols="12">
         <div class="figure-list-container">
-          <div v-for="(item, index) in FigureList" :key="item + '_' + index">
-            <div class="item">
-              <div v-if="isCirculo(item)">
-                <v-icon color="blue darken-2"> mdi-circle </v-icon>
-              </div>
-              <div v-else-if="isTriangulo(item)">
-                <v-icon color="red darken-2"> mdi-triangle </v-icon>
-              </div>
-              <div v-else-if="isCuadrado(item)">
-                <v-icon color="green darken-2"> mdi-square </v-icon>
-              </div>
-
-              <div>{{ item }}</div>
-              <div>{{ index }}</div>
-            </div>
+          <div
+            class="figure-node"
+            v-for="(item, index) in figureList"
+            :key="item + '_' + index"
+          >
+            <Figure :item="item" :index="index">
+              <!-- show icons actions -->
+              <template v-slot:icons-actions>
+                <v-btn
+                  color="green lighten-2"
+                  @click="addAt(index, 'cuadrado')"
+                >
+                  <v-icon color="green darken-2"> mdi-square </v-icon>
+                </v-btn>
+                <v-btn color="red lighten-2" @click="addAt(index, 'triangulo')">
+                  <v-icon color="red darken-2"> mdi-triangle </v-icon>
+                </v-btn>
+                <v-btn color="blue lighten-2" @click="addAt(index, 'circulo')">
+                  <v-icon color="blue darken-2"> mdi-circle </v-icon>
+                </v-btn>
+              </template>
+              <!-- show icons -->
+              <template v-slot:figure>
+                <div v-if="isCirculo(item)">
+                  <v-icon color="blue darken-2"> mdi-circle </v-icon>
+                </div>
+                <div v-else-if="isTriangulo(item)">
+                  <v-icon color="red darken-2"> mdi-triangle </v-icon>
+                </div>
+                <div v-else-if="isCuadrado(item)">
+                  <v-icon color="green darken-2"> mdi-square </v-icon>
+                </div>
+              </template>
+            </Figure>
           </div>
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row class="text-center" v-if="figureList.isEmpty()">
+      <v-col cols="12">
+        <!-- Inital List -->
+        <div>
+          <v-btn color="primary" @click="showModal = !showModal"
+            >Select Figure</v-btn
+          >
+        </div>
+      </v-col>
+    </v-row>
+
+    <v-row class="text-center">
+      <v-col cols="12">
+        <div class="modal-container">
+          <!-- modal -->
+          <v-dialog
+            v-model="showModal"
+            transition="dialog-top-transition"
+            max-width="400"
+            height="400"
+          >
+            <template v-slot:default="dialog">
+              <v-card max-width="400" height="400">
+                <!-- content modal -->
+                <div>
+                  <v-btn
+                    class="mx-2"
+                    color="blue lighten-2"
+                    @click="addAt(0, 'circulo')"
+                  >
+                    <v-icon color="blue darken-2"> mdi-circle </v-icon>
+                  </v-btn>
+                </div>
+                <div>
+                  <v-btn
+                    class="mx-2"
+                    color="red lighten-2"
+                    @click="addAt(0, 'triangulo')"
+                  >
+                    <v-icon color="red darken-2"> mdi-triangle </v-icon>
+                  </v-btn>
+                </div>
+                <div>
+                  <v-btn
+                    class="mx-2"
+                    color="green lighten-2"
+                    @click="addAt(0, 'cuadrado')"
+                  >
+                    <v-icon color="green darken-2"> mdi-square </v-icon>
+                  </v-btn>
+                </div>
+                <v-card-actions class="justify-end">
+                  <v-btn text @click="dialog.value = false">Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </template>
+          </v-dialog>
         </div>
       </v-col>
     </v-row>
@@ -49,18 +113,23 @@ import Figure from "./Figure.vue";
 @Component({
   components: { Figure },
 })
-export default class ListFigure extends Vue {
-  public FigureList = new LinkedList();
+export default class ListFigure extends Vue { // eslint-disable-line
+  public figureList = new LinkedList();
+  public showModal = false;
 
-  public addTriangulo() {
-    this.FigureList.addFront("triangulo");
+  public addAt(index: number, item: string) {
+    this.showModal = false;
+    this.figureList.addAt(index, item);
   }
-  public addCirculo() {
-    this.FigureList.addFront("circulo");
+
+  public removeAt(index: number) {
+    this.figureList.removeAt(index);
   }
-  public addCuadrado() {
-    this.FigureList.addFront("cuadrado");
+
+  public isEmpty() {
+    return this.figureList.isEmpty();
   }
+
   public isTriangulo<LinkedList>(item: LinkedList) {
     const figureItem = JSON.parse(JSON.stringify(item));
     if (figureItem === "triangulo") {
@@ -86,9 +155,16 @@ export default class ListFigure extends Vue {
 .figure-list-container {
   display: flex;
   overflow-x: auto;
-  .item {
+  .figure-node {
     margin-right: 15px;
     margin-bottom: 5px;
+    min-width: 10%;
   }
 }
+
+.modal-container {
+  min-width: 35%;
+}
 </style>
+
+function mounted() { throw new Error("Function not implemented."); }
