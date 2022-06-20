@@ -58,13 +58,8 @@
       <v-col cols="12">
         <div class="modal-container">
           <!-- modal -->
-          <v-dialog
-            v-model="showModal"
-            transition="dialog-top-transition"
-            max-width="400"
-            height="400"
-          >
-            <template v-slot:default="dialog">
+          <selection-figure-modal :showModal="showModal">
+            <template v-slot:modal-content>
               <v-card max-width="400" height="400">
                 <!-- content modal -->
                 <div>
@@ -95,11 +90,11 @@
                   </v-btn>
                 </div>
                 <v-card-actions class="justify-end">
-                  <v-btn text @click="dialog.value = false">Close</v-btn>
+                  <v-btn text @click="showModal = false">Close</v-btn>
                 </v-card-actions>
               </v-card>
             </template>
-          </v-dialog>
+          </selection-figure-modal>
         </div>
       </v-col>
     </v-row>
@@ -110,8 +105,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import LinkedList from "./../model/linked-list";
 import Figure from "./Figure.vue";
+import SelectionFigureModal from "./SelectionFigureModal.vue";
 @Component({
-  components: { Figure },
+  components: { Figure, SelectionFigureModal },
 })
 export default class ListFigure extends Vue { // eslint-disable-line
   public figureList = new LinkedList();
