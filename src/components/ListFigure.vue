@@ -10,42 +10,35 @@
             :key="item + '_' + index"
           >
             <Figure :item="item" :index="index">
-              <!-- show icons actions -->
-              <template v-slot:icons-actions>
+              <!-- icon actions hover -->
+              <template v-slot:hover-options>
                 <v-btn
                   color="green lighten-2"
-                  @click="addAt(index, 'cuadrado')"
+                  @click="showSelectedFigure(index, item)"
                 >
-                  <v-icon color="green darken-2"> mdi-square </v-icon>
+                  <v-icon color="green darken-2"> mdi-arrow-left </v-icon>
                 </v-btn>
-                <v-btn color="red lighten-2" @click="addAt(index, 'triangulo')">
-                  <v-icon color="red darken-2"> mdi-triangle </v-icon>
+                <v-btn
+                  color="red lighten-2"
+                  @click="showSelectedFigure(index, item)"
+                >
+                  <v-icon color="red darken-2"> mdi-arrow-down </v-icon>
                 </v-btn>
-                <v-btn color="blue lighten-2" @click="addAt(index, 'circulo')">
-                  <v-icon color="blue darken-2"> mdi-circle </v-icon>
+                <v-btn
+                  color="blue lighten-2"
+                  @click="showSelectedFigure(index, item)"
+                >
+                  <v-icon color="blue darken-2"> mdi-arrow-right </v-icon>
                 </v-btn>
-              </template>
-              <!-- show icons -->
-              <template v-slot:figure>
-                <div v-if="isCirculo(item)">
-                  <v-icon color="blue darken-2"> mdi-circle </v-icon>
-                </div>
-                <div v-else-if="isTriangulo(item)">
-                  <v-icon color="red darken-2"> mdi-triangle </v-icon>
-                </div>
-                <div v-else-if="isCuadrado(item)">
-                  <v-icon color="green darken-2"> mdi-square </v-icon>
-                </div>
               </template>
             </Figure>
           </div>
         </div>
       </v-col>
     </v-row>
-
+    <!-- Inital List -->
     <v-row class="text-center" v-if="figureList.isEmpty()">
       <v-col cols="12">
-        <!-- Inital List -->
         <div>
           <v-btn color="primary" @click="showModal = !showModal"
             >Select Figure</v-btn
@@ -53,46 +46,73 @@
         </div>
       </v-col>
     </v-row>
-
+    <!-- modals -->
     <v-row class="text-center">
       <v-col cols="12">
         <div class="modal-container">
-          <!-- modal -->
           <selection-figure-modal :showModal="showModal">
             <template v-slot:modal-content>
-              <v-card max-width="400" height="400">
-                <!-- content modal -->
-                <div>
-                  <v-btn
-                    class="mx-2"
-                    color="blue lighten-2"
-                    @click="addAt(0, 'circulo')"
-                  >
-                    <v-icon color="blue darken-2"> mdi-circle </v-icon>
-                  </v-btn>
-                </div>
-                <div>
-                  <v-btn
-                    class="mx-2"
-                    color="red lighten-2"
-                    @click="addAt(0, 'triangulo')"
-                  >
-                    <v-icon color="red darken-2"> mdi-triangle </v-icon>
-                  </v-btn>
-                </div>
-                <div>
-                  <v-btn
-                    class="mx-2"
-                    color="green lighten-2"
-                    @click="addAt(0, 'cuadrado')"
-                  >
-                    <v-icon color="green darken-2"> mdi-square </v-icon>
-                  </v-btn>
-                </div>
-                <v-card-actions class="justify-end">
-                  <v-btn text @click="showModal = false">Close</v-btn>
-                </v-card-actions>
-              </v-card>
+              <template v-if="figureList.isEmpty()">
+                <v-card max-width="400" height="400">
+                  <!-- content modal first element -->
+                  <div>
+                    <v-btn color="blue lighten-2" @click="addAt(0, 'circulo')">
+                      <v-icon color="blue darken-2"> mdi-circle </v-icon>
+                    </v-btn>
+                  </div>
+                  <div>
+                    <v-btn color="red lighten-2" @click="addAt(0, 'triangulo')">
+                      <v-icon color="red darken-2"> mdi-triangle </v-icon>
+                    </v-btn>
+                  </div>
+                  <div>
+                    <v-btn
+                      color="green lighten-2"
+                      @click="addAt(0, 'cuadrado')"
+                    >
+                      <v-icon color="green darken-2"> mdi-square </v-icon>
+                    </v-btn>
+                  </div>
+                  <v-card-actions class="justify-end">
+                    <v-btn text @click="showModal = false">Close</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+              <template v-else>
+                <v-card max-width="400" height="400">
+                  <!-- content modal -->
+                  <div>
+                    <div>
+                      <v-btn
+                        color="blue lighten-2"
+                        @click="addAt(selectedFigure['index'], 'circulo')"
+                      >
+                        <v-icon color="blue darken-2"> mdi-circle </v-icon>
+                      </v-btn>
+                    </div>
+                    <div>
+                      <v-btn
+                        color="red lighten-2"
+                        @click="addAt(selectedFigure['index'], 'triangulo')"
+                      >
+                        <v-icon color="red darken-2"> mdi-triangle </v-icon>
+                      </v-btn>
+                    </div>
+                    <div>
+                      <v-btn
+                        color="green lighten-2"
+                        @click="addAt(selectedFigure['index'], 'cuadrado')"
+                      >
+                        <v-icon color="green darken-2"> mdi-square </v-icon>
+                      </v-btn>
+                    </div>
+                    {{ selectedFigure }}
+                  </div>
+                  <v-card-actions class="justify-end">
+                    <v-btn text @click="showModal = false">Close</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
             </template>
           </selection-figure-modal>
         </div>
@@ -109,9 +129,10 @@ import SelectionFigureModal from "./SelectionFigureModal.vue";
 @Component({
   components: { Figure, SelectionFigureModal },
 })
-export default class ListFigure extends Vue { // eslint-disable-line
+export default class ListFigure extends Vue {
   public figureList = new LinkedList();
   public showModal = false;
+  public selectedFigure: any = {}; // eslint-disable-line
 
   public addAt(index: number, item: string) {
     this.showModal = false;
@@ -122,27 +143,14 @@ export default class ListFigure extends Vue { // eslint-disable-line
     this.figureList.removeAt(index);
   }
 
-  public isEmpty() {
-    return this.figureList.isEmpty();
+  public showSelectedFigure<LinkedList>(index: number, item: LinkedList) {
+    const figureItem = JSON.parse(JSON.stringify(item));
+    this.showModal = true;
+    this.selectedFigure = { index, figureItem };
   }
 
-  public isTriangulo<LinkedList>(item: LinkedList) {
-    const figureItem = JSON.parse(JSON.stringify(item));
-    if (figureItem === "triangulo") {
-      return true;
-    }
-  }
-  public isCirculo<LinkedList>(item: LinkedList) {
-    const figureItem = JSON.parse(JSON.stringify(item));
-    if (figureItem === "circulo") {
-      return true;
-    }
-  }
-  public isCuadrado<LinkedList>(item: LinkedList) {
-    const figureItem = JSON.parse(JSON.stringify(item));
-    if (figureItem === "cuadrado") {
-      return true;
-    }
+  public isEmpty() {
+    return this.figureList.isEmpty();
   }
 }
 </script>
@@ -155,6 +163,7 @@ export default class ListFigure extends Vue { // eslint-disable-line
     margin-right: 15px;
     margin-bottom: 5px;
     min-width: 10%;
+    min-height: 10%;
   }
 }
 
