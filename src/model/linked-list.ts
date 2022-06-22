@@ -62,14 +62,13 @@ class LinkedList<T> implements Iterable<T> {
     return true;
   }
   addAt(i: number, val: T): boolean {
-    if (i === 0) {
+    if (i < 0) {
       return this.addFront(val);
     }
 
-    if (i + 1 === this.size()) {
+    if (i >= this.size()) {
       return this.addBack(val);
     }
-
     if (i < 0 || i >= this.size() || !this.list) return false;
 
     let cur = this.list.head;

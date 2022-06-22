@@ -5,6 +5,7 @@
       transition="dialog-top-transition"
       max-width="400"
       height="400"
+      @click:outside="closeDialog"
     >
       <template v-slot:default>
         <slot name="modal-content"></slot>
@@ -19,13 +20,10 @@ import { Component, Vue, Prop } from "vue-property-decorator";
   components: {},
 })
 export default class SelectionFigureModal extends Vue {
-  @Prop({ default: () => undefined }) item!: string | undefined;
-  @Prop({ default: () => undefined }) index!: number | undefined;
   @Prop({ default: () => undefined }) showModal!: boolean | undefined;
 
-  public figure: string | undefined = "";
-  mounted() {
-    this.figure = this.item;
+  closeDialog() {
+    this.$emit("input", false);
   }
 }
 </script>

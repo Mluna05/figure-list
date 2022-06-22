@@ -26,30 +26,22 @@
                   <div class="button-left-postion">
                     <v-btn
                       color="white"
-                      @click="showSelectedFigure(index, item)"
+                      @click="showSelectedFigure(getindex(index), item)"
                     >
                       <v-icon color="blue darken-2"> mdi-arrow-left </v-icon>
-                    </v-btn>
-                  </div>
-                  <div class="button-delete-postion">
-                    <v-btn color="white" @click="removeAt(index)">
-                      <v-icon color="red darken-2"> mdi-trash-can </v-icon>
-                    </v-btn>
-                  </div>
-                  <div class="button-down-postion">
-                    <v-btn
-                      color="white"
-                      @click="showSelectedFigure(index, item)"
-                    >
-                      <v-icon color="blue darken-2"> mdi-arrow-down </v-icon>
                     </v-btn>
                   </div>
                   <div class="button-right-postion">
                     <v-btn
                       color="white"
-                      @click="showSelectedFigure(index, item)"
+                      @click="showSelectedFigure(index + 1, item)"
                     >
                       <v-icon color="blue darken-2"> mdi-arrow-right </v-icon>
+                    </v-btn>
+                  </div>
+                  <div class="button-delete-postion">
+                    <v-btn color="white" @click="removeAt(index)">
+                      <v-icon color="red darken-2"> mdi-trash-can </v-icon>
                     </v-btn>
                   </div>
                 </div>
@@ -63,7 +55,7 @@
     <v-row class="text-center">
       <v-col cols="12">
         <div class="modal-container">
-          <selection-figure-modal :showModal="showModal">
+          <selection-figure-modal :showModal="showModal" @input="setModal">
             <template v-slot:modal-content>
               <template>
                 <v-card max-width="400" height="400" class="modal-content">
@@ -72,7 +64,7 @@
                     <div>
                       <v-btn
                         color="blue lighten-2"
-                        @click="addAt(0, 'circulo')"
+                        @click="addAt(selectedFigure.index, 'circulo')"
                       >
                         <v-icon color="blue darken-2"> mdi-circle </v-icon>
                       </v-btn>
@@ -80,7 +72,7 @@
                     <div>
                       <v-btn
                         color="red lighten-2"
-                        @click="addAt(0, 'triangulo')"
+                        @click="addAt(selectedFigure.index, 'triangulo')"
                       >
                         <v-icon color="red darken-2"> mdi-triangle </v-icon>
                       </v-btn>
@@ -88,7 +80,7 @@
                     <div>
                       <v-btn
                         color="green lighten-2"
-                        @click="addAt(0, 'cuadrado')"
+                        @click="addAt(selectedFigure.index, 'cuadrado')"
                       >
                         <v-icon color="green darken-2"> mdi-square </v-icon>
                       </v-btn>
@@ -120,7 +112,7 @@ import SelectionFigureModal from "./SelectionFigureModal.vue";
 export default class ListFigure extends Vue {
   public figureList = new LinkedList();
   public showModal = false;
-  public selectedFigure: any = {}; // eslint-disable-line
+  public selectedFigure: any = { index: 0, item: ''}; // eslint-disable-line
 
   public addAt(index: number, item: string) {
     this.showModal = false;
@@ -131,6 +123,15 @@ export default class ListFigure extends Vue {
     this.figureList.removeAt(index);
   }
 
+  public getindex(index: number): number {
+    //revisa si es el ultimo elemento
+    return index === this.figureList.size()
+      ? index - 1
+      : index === 0 //revisa si es el primer elemento
+      ? -1
+      : index;
+  }
+
   public showSelectedFigure<LinkedList>(index: number, item: LinkedList) {
     const figureItem = JSON.parse(JSON.stringify(item));
     this.showModal = true;
@@ -139,6 +140,9 @@ export default class ListFigure extends Vue {
 
   public isEmpty() {
     return this.figureList.isEmpty();
+  }
+  public setModal() {
+    this.showModal = !this.showModal;
   }
 }
 </script>
@@ -188,10 +192,6 @@ export default class ListFigure extends Vue {
 .button-delete-postion {
   position: absolute;
   top: 0;
-}
-.button-down-postion {
-  position: absolute;
-  bottom: 0;
 }
 .button-right-postion {
   position: absolute;
