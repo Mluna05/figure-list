@@ -1,5 +1,15 @@
 <template>
   <v-container>
+    <!-- Inital List -->
+    <v-row class="text-center" v-if="figureList.isEmpty()">
+      <v-col cols="12">
+        <div>
+          <v-btn color="primary" @click="showModal = !showModal"
+            >Select Figure</v-btn
+          >
+        </div>
+      </v-col>
+    </v-row>
     <!-- figure-list -->
     <v-row class="text-center">
       <v-col cols="12">
@@ -12,37 +22,40 @@
             <Figure :item="item" :index="index">
               <!-- icon actions hover -->
               <template v-slot:hover-options>
-                <v-btn
-                  color="green lighten-2"
-                  @click="showSelectedFigure(index, item)"
-                >
-                  <v-icon color="green darken-2"> mdi-arrow-left </v-icon>
-                </v-btn>
-                <v-btn
-                  color="red lighten-2"
-                  @click="showSelectedFigure(index, item)"
-                >
-                  <v-icon color="red darken-2"> mdi-arrow-down </v-icon>
-                </v-btn>
-                <v-btn
-                  color="blue lighten-2"
-                  @click="showSelectedFigure(index, item)"
-                >
-                  <v-icon color="blue darken-2"> mdi-arrow-right </v-icon>
-                </v-btn>
+                <div class="buttons-container">
+                  <div class="button-left-postion">
+                    <v-btn
+                      color="white"
+                      @click="showSelectedFigure(index, item)"
+                    >
+                      <v-icon color="blue darken-2"> mdi-arrow-left </v-icon>
+                    </v-btn>
+                  </div>
+                  <div class="button-delete-postion">
+                    <v-btn color="white" @click="removeAt(index)">
+                      <v-icon color="red darken-2"> mdi-trash-can </v-icon>
+                    </v-btn>
+                  </div>
+                  <div class="button-down-postion">
+                    <v-btn
+                      color="white"
+                      @click="showSelectedFigure(index, item)"
+                    >
+                      <v-icon color="blue darken-2"> mdi-arrow-down </v-icon>
+                    </v-btn>
+                  </div>
+                  <div class="button-right-postion">
+                    <v-btn
+                      color="white"
+                      @click="showSelectedFigure(index, item)"
+                    >
+                      <v-icon color="blue darken-2"> mdi-arrow-right </v-icon>
+                    </v-btn>
+                  </div>
+                </div>
               </template>
             </Figure>
           </div>
-        </div>
-      </v-col>
-    </v-row>
-    <!-- Inital List -->
-    <v-row class="text-center" v-if="figureList.isEmpty()">
-      <v-col cols="12">
-        <div>
-          <v-btn color="primary" @click="showModal = !showModal"
-            >Select Figure</v-btn
-          >
         </div>
       </v-col>
     </v-row>
@@ -52,40 +65,14 @@
         <div class="modal-container">
           <selection-figure-modal :showModal="showModal">
             <template v-slot:modal-content>
-              <template v-if="figureList.isEmpty()">
-                <v-card max-width="400" height="400">
+              <template>
+                <v-card max-width="400" height="400" class="modal-content">
                   <!-- content modal first element -->
-                  <div>
-                    <v-btn color="blue lighten-2" @click="addAt(0, 'circulo')">
-                      <v-icon color="blue darken-2"> mdi-circle </v-icon>
-                    </v-btn>
-                  </div>
-                  <div>
-                    <v-btn color="red lighten-2" @click="addAt(0, 'triangulo')">
-                      <v-icon color="red darken-2"> mdi-triangle </v-icon>
-                    </v-btn>
-                  </div>
-                  <div>
-                    <v-btn
-                      color="green lighten-2"
-                      @click="addAt(0, 'cuadrado')"
-                    >
-                      <v-icon color="green darken-2"> mdi-square </v-icon>
-                    </v-btn>
-                  </div>
-                  <v-card-actions class="justify-end">
-                    <v-btn text @click="showModal = false">Close</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </template>
-              <template v-else>
-                <v-card max-width="400" height="400">
-                  <!-- content modal -->
-                  <div>
+                  <div class="buttons-container">
                     <div>
                       <v-btn
                         color="blue lighten-2"
-                        @click="addAt(selectedFigure['index'], 'circulo')"
+                        @click="addAt(0, 'circulo')"
                       >
                         <v-icon color="blue darken-2"> mdi-circle </v-icon>
                       </v-btn>
@@ -93,7 +80,7 @@
                     <div>
                       <v-btn
                         color="red lighten-2"
-                        @click="addAt(selectedFigure['index'], 'triangulo')"
+                        @click="addAt(0, 'triangulo')"
                       >
                         <v-icon color="red darken-2"> mdi-triangle </v-icon>
                       </v-btn>
@@ -101,16 +88,17 @@
                     <div>
                       <v-btn
                         color="green lighten-2"
-                        @click="addAt(selectedFigure['index'], 'cuadrado')"
+                        @click="addAt(0, 'cuadrado')"
                       >
                         <v-icon color="green darken-2"> mdi-square </v-icon>
                       </v-btn>
                     </div>
-                    {{ selectedFigure }}
                   </div>
-                  <v-card-actions class="justify-end">
-                    <v-btn text @click="showModal = false">Close</v-btn>
-                  </v-card-actions>
+                  <div class="close-container">
+                    <div class="btn-close-position">
+                      <v-btn text @click="showModal = false">Close</v-btn>
+                    </div>
+                  </div>
                 </v-card>
               </template>
             </template>
@@ -160,15 +148,55 @@ export default class ListFigure extends Vue {
   display: flex;
   overflow-x: auto;
   .figure-node {
-    margin-right: 15px;
-    margin-bottom: 5px;
-    min-width: 10%;
+    max-width: 30%;
+    min-width: 20%;
     min-height: 10%;
+    margin: 22px 19px;
   }
 }
 
 .modal-container {
   min-width: 35%;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.close-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.btn-close-position {
+  position: absolute;
+  bottom: 10%;
+}
+.button-left-postion {
+  position: absolute;
+  top: 30%;
+  left: 0;
+}
+.button-delete-postion {
+  position: absolute;
+  top: 0;
+}
+.button-down-postion {
+  position: absolute;
+  bottom: 0;
+}
+.button-right-postion {
+  position: absolute;
+  top: 30%;
+  right: 0;
 }
 </style>
 

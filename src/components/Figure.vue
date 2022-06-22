@@ -1,13 +1,21 @@
 <template>
   <v-hover v-slot="{ hover }">
     <v-card>
-      <div v-if="isCirculo(item)" style="height: 6em">
+      <div class="figure-position" v-if="isCirculo(item)" style="height: 6em">
         <v-icon color="blue darken-2"> mdi-circle </v-icon>
       </div>
-      <div v-else-if="isTriangulo(item)" style="height: 6em">
+      <div
+        class="figure-position"
+        v-else-if="isTriangulo(item)"
+        style="height: 6em"
+      >
         <v-icon color="red darken-2"> mdi-triangle </v-icon>
       </div>
-      <div v-else-if="isCuadrado(item)" style="height: 6em">
+      <div
+        class="figure-position"
+        v-else-if="isCuadrado(item)"
+        style="height: 6em"
+      >
         <v-icon color="green darken-2"> mdi-square </v-icon>
       </div>
       <v-expand-transition mode="out-in">
@@ -61,5 +69,9 @@ export default class Figure extends Vue {
   opacity: 0.5;
   position: absolute;
   width: 100%;
+}
+.figure-position {
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -176,28 +176,35 @@ class LinkedList<T> implements Iterable<T> {
     return val;
   }
   // elimina uno en el indice indicado
-  removeAt(i: number): T {
+  removeAt(i: number): T | null {
+    if (!this.list) {
+      return null;
+    }
+
     if (i === 0) {
       return this.removeFront();
-    }
-    if (i === this.size() - 1) {
+    } else if (i === this.size() - 1) {
       return this.removeBack();
     }
-    if (i < 0 || i >= this.size() || !this.list) {
-      throw new Error(utils.EMPTY_ERROR);
-    }
+
+    if (i < 0 || i >= this.list.size) return null;
+
     let j = 0;
     let cur = this.list.head;
-    while (j > i) {
-      cur = cur.next!;// eslint-disable-line
+
+    while (j < i) {
+      cur = cur.next!// eslint-disable-line
       j += 1;
     }
-    cur.next!.prev = cur.prev; // eslint-disable-line
-    cur.prev!.next = cur.next; // eslint-disable-line
+
+    cur.prev!.next = cur.next // eslint-disable-line
+    cur.next!.prev = cur.prev // eslint-disable-line
+
     this.list.size -= 1;
+
     return cur.val;
   }
-  // limpia la lista
+
   clear(): void {
     this.list = undefined;
   }
