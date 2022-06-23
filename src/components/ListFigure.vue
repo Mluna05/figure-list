@@ -66,7 +66,7 @@
             <template v-slot:modal-content>
               <template>
                 <v-card max-width="400" height="400" class="modal-content">
-                  <!-- content modal first element -->
+                  <!-- modal content -->
                   <div class="buttons-container">
                     <div>
                       <v-btn

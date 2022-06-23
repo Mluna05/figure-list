@@ -110,7 +110,7 @@ class LinkedList<T> implements Iterable<T> {
 
     return index !== -1;
   }
-  /**************  DEletion  ****************/
+  /**************  Deletion  ****************/
   removeFront(): T {
     if (!this.list) {
       throw new Error(utils.EMPTY_ERROR);
