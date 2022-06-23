@@ -13,12 +13,10 @@ class LinkedList<T> implements Iterable<T> {
   constructor() {
     this.list = undefined;
   }
-  // el tamaño del la lista
   size(): number {
     if (this.list) return this.list.size;
     return 0;
   }
-  // regresa true o false y la lista no tiene datos
   isEmpty(): boolean {
     return !this.list;
   }
@@ -72,18 +70,15 @@ class LinkedList<T> implements Iterable<T> {
     if (i < 0 || i >= this.size() || !this.list) return false;
 
     let cur = this.list.head;
-    // traverse to index
     for (let j = 0; j < i - 1; j++) {
         cur = cur.next!; // eslint-disable-line
     }
 
     const newNode = new LinkedListNode(val);
 
-    // link next node
       cur.next!.prev = newNode; // eslint-disable-line
     newNode.next = cur.next;
 
-    // link prev node
     newNode.prev = cur;
     cur.next = newNode;
 
@@ -91,34 +86,7 @@ class LinkedList<T> implements Iterable<T> {
 
     return true;
   }
-  /**************  Accesing  ****************/
-  //   regresa el valor de la cabeza
-  peekFront(): T {
-    if (!this.list) {
-      throw new Error(utils.EMPTY_ERROR);
-    }
-    return this.list.head.val;
-  }
-  //   regresa el valor de la cola
-  peekBack(): T {
-    if (!this.list) {
-      throw new Error("EMPTY_ERROR");
-    }
-    return this.list.tail.val;
-  }
   /**************  Serching  ****************/
-  get(i: number): T {
-    if (i < 0 || i >= this.size() || !this.list) {
-      throw new Error(utils.OUT_OF_BOUNDS_ERROR);
-    }
-    let j = 0;
-    let cur = this.list.head;
-    while (j < i) {
-      cur = cur.next!; // eslint-disable-line
-      j++;
-    }
-    return cur.val;
-  }
   indexOf(value: T): number {
     if (!this.list) {
       return -1;
@@ -137,7 +105,6 @@ class LinkedList<T> implements Iterable<T> {
 
     return i;
   }
-  // revisa si el elemento existe
   contains(value: T): boolean {
     const index = this.indexOf(value);
 
@@ -174,7 +141,6 @@ class LinkedList<T> implements Iterable<T> {
     }
     return val;
   }
-  // elimina uno en el indice indicado
   removeAt(i: number): T | null {
     if (!this.list) {
       return null;

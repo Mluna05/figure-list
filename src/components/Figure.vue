@@ -1,12 +1,12 @@
 <template>
   <v-hover v-slot="{ hover }">
     <v-card>
-      <div class="figure-position" v-if="isCirculo(item)" style="height: 6em">
+      <div class="figure-position" v-if="isCircle(item)" style="height: 6em">
         <v-icon color="blue darken-2"> mdi-circle </v-icon>
       </div>
       <div
         class="figure-position"
-        v-else-if="isTriangulo(item)"
+        v-else-if="isTriangle(item)"
         style="height: 6em"
       >
         <v-icon color="red darken-2"> mdi-triangle </v-icon>
@@ -40,15 +40,15 @@ export default class Figure extends Vue {
   mounted() {
     this.figure = this.item;
   }
-  public isTriangulo<LinkedList>(item: LinkedList) {
+  public isTriangle<LinkedList>(item: LinkedList) {
     const figureItem = JSON.parse(JSON.stringify(item));
-    if (figureItem === "triangulo") {
+    if (figureItem === "triangle") {
       return true;
     }
   }
-  public isCirculo<LinkedList>(item: LinkedList) {
+  public isCircle<LinkedList>(item: LinkedList) {
     const figureItem = JSON.parse(JSON.stringify(item));
-    if (figureItem === "circulo") {
+    if (figureItem === "circle") {
       return true;
     }
   }
